@@ -12,6 +12,20 @@ html, body {
 
 :root { color-scheme: light only !important; }
 
+/* Firefox */
+@media (prefers-color-scheme: dark) {
+    :root {
+        color-scheme: light;
+    }
+}
+
+/* Chrome */
+@media (forced-colors: active) {
+    :root {
+        color-scheme: light;
+    }
+}
+
 main {
     max-width: 1920px;
     text-align: center;
