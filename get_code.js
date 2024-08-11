@@ -133,12 +133,47 @@ function generateCode(storeId, orderId, purchased) {
     return code.match(/.{4}/g).join("-");
 }
 
+function updateCode(code) {
+    const [part1, part2, part3] = code.split('-');
+    document.getElementById('part1').textContent = part1;
+    document.getElementById('part2').textContent = part2;
+    document.getElementById('part3').textContent = part3;
+}
+
+// Function to copy the clicked text to clipboard
+function copyToClipboard(event) {
+    const textToCopy = event.target.textContent;
+    navigator.clipboard.writeText(textToCopy).then(() => {
+        highlightText(event.target);
+    }).catch(err => {
+        console.error('Could not copy text: ', err);
+    });
+}
+
+function highlightText(element) {
+    const originalColor = element.style.color;
+    element.style.color = '#333';  // Highlight color
+
+    setTimeout(() => {
+        element.style.color = originalColor;  // Revert to original color
+    }, 500);  // Duration of the highlight effect
+}
+
+
+
 $(document).ready(() => {
     const item = items[Math.floor(Math.random() * items.length)];
     const storeId = item;
     const orderId = Math.floor(Math.random() * 9) + 1;
     const purchased = generateRandomTimeYesterday();
 
+        // Adding event listeners to each code part
+    document.getElementById('part1').addEventListener('click', copyToClipboard);
+    document.getElementById('part2').addEventListener('click', copyToClipboard);
+    document.getElementById('part3').addEventListener('click', copyToClipboard);
+
     const code = generateCode(storeId, orderId, purchased);
-    $("#code").text(code);
+    updateCode(code);
+    // $("#code").text(code);
 });
+
