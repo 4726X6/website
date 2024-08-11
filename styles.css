@@ -30,6 +30,7 @@ main {
 input[type="submit"] {
     background: #444;
     color: bisque;
+    border: 0px solid #888;
     font-size: 25px;
     font-family: "Courier New", Courier, monospace;
     margin-top: 25px;
