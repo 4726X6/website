@@ -29,7 +29,6 @@ main {
 
 input[type="submit"] {
     background: #444;
-    border: 2px solid #888;
     color: bisque;
     font-size: 25px;
     font-family: "Courier New", Courier, monospace;
