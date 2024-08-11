@@ -1,0 +1,100 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #333;
+    color: bisque;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+main {
+    max-width: 1920px;
+    text-align: center;
+}
+
+hr {
+    margin-bottom: 16px;
+    margin-top: 16px;
+}
+
+label {
+    cursor: pointer;
+}
+
+input[type="datetime-local"],
+input[type="number"],
+select {
+    font-family: inherit;
+    font-size: inherit;
+}
+
+input[type="datetime-local"],
+input[type="number"] {
+    min-width: 64px;
+}
+
+section:not(:last-child) {
+    margin-bottom: 24px;
+}
+
+.df {
+    display: flex;
+    justify-content: center;
+}
+
+.fdc {
+    flex-direction: column;
+}
+
+.aic {
+    align-items: center;
+}
+
+.jcc {
+    justify-content: center;
+}
+
+.inputs > .row:not(:last-child) {
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+.inputs > .row label > span:first-child {
+    margin-right: 12px;
+    min-width: 85px;
+    text-align: right;
+}
+
+#code {
+    background-color: #222;
+    display: inline-block;
+    font-size: 80px;
+    padding: 16px;
+    text-align: center;
+}
+
+p {
+    font-size: 30px;
+    font-weight: 700;
+}
+
+form {
+    font-size: 30px;
+}
+
+input[type="submit"]{
+    background: #222;
+    border: 10px solid #222;
+    color: bisque;
+    font-size: 25px;
+    margin-top: 25px;
+}
+
+
+.select2-container li {
+    color: black;
+    text-align: center;
+}
