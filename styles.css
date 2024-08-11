@@ -1,3 +1,4 @@
+/* Base Styles */
 html, body {
     height: 100%;
     margin: 0;
@@ -5,82 +6,16 @@ html, body {
     display: flex;
     align-items: center;
     justify-content: center;
+    background-color: #333; /* Default to dark background */
     color: bisque;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 }
 
-:root { color-scheme: light only !important; }
-
-/* Firefox */
-@media (prefers-color-scheme: dark) {
-    :root {
-        color-scheme: light;
-    }
-}
-
-/* Chrome */
-@media (forced-colors: active) {
-    :root {
-        color-scheme: light;
-    }
-}
-
 main {
-    max-width: 1920px;
+    max-width: 100%;
     text-align: center;
-}
-
-hr {
-    margin-bottom: 16px;
-    margin-top: 16px;
-}
-
-label {
-    cursor: pointer;
-}
-
-input[type="datetime-local"],
-input[type="number"],
-select {
-    font-family: inherit;
-    font-size: inherit;
-}
-
-input[type="datetime-local"],
-input[type="number"] {
-    min-width: 64px;
-}
-
-section:not(:last-child) {
-    margin-bottom: 24px;
-}
-
-.df {
-    display: flex;
-    justify-content: center;
-}
-
-.fdc {
-    flex-direction: column;
-}
-
-.aic {
-    align-items: center;
-}
-
-.jcc {
-    justify-content: center;
-}
-
-.inputs > .row:not(:last-child) {
-    margin-bottom: 24px;
-    text-align: center;
-}
-
-.inputs > .row label > span:first-child {
-    margin-right: 12px;
-    min-width: 85px;
-    text-align: right;
+    padding: 16px;
+    box-sizing: border-box;
 }
 
 #code {
@@ -89,27 +24,97 @@ section:not(:last-child) {
     font-size: 80px;
     padding: 16px;
     text-align: center;
+    color: bisque;
 }
 
-p {
-    font-size: 30px;
-    font-weight: 700;
-}
-
-form {
-    font-size: 30px;
-}
-
-input[type="submit"]{
-    background: #222;
-    border: 10px solid #222;
+input[type="submit"] {
+    background: #444;
+    border: 2px solid #888;
     color: bisque;
     font-size: 25px;
+    font-family: "Courier New", Courier, monospace;
     margin-top: 25px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background 0.3s, border-color 0.3s;
 }
 
+/* Mobile-Friendly Adjustments */
+@media (max-width: 768px) {
+    p, form {
+        font-size: 24px;
+    }
 
-.select2-container li {
-    color: black;
-    text-align: center;
+    #code {
+        font-size: 50px;
+        padding: 12px;
+    }
+
+    input[type="submit"] {
+        font-size: 20px;
+        margin-top: 20px;
+        padding: 10px 20px;
+    }
+
+    main {
+        padding: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    p, form {
+        font-size: 20px;
+    }
+
+    #code {
+        font-size: 40px;
+        padding: 10px;
+    }
+
+    input[type="submit"] {
+        font-size: 18px;
+        margin-top: 15px;
+        padding: 8px 16px;
+    }
+
+    main {
+        padding: 4px;
+    }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+    html, body {
+        background-color: #333; /* Dark background for dark mode */
+        color: bisque; /* Text color for dark mode */
+    }
+
+    #code {
+        background-color: #222; /* Darker code block background */
+        color: bisque; /* Code text color */
+    }
+
+    input[type="submit"] {
+        background: #444; /* Dark button background */
+        border-color: #888; /* Button border color */
+    }
+}
+
+/* Light Mode Support */
+@media (prefers-color-scheme: light) {
+    html, body {
+        background-color: #f5f5f5; /* Light background for light mode */
+        color: #333; /* Darker text color for light mode */
+    }
+
+    #code {
+        background-color: #eee; /* Lighter code block background */
+        color: #333; /* Darker code text color */
+    }
+
+    input[type="submit"] {
+        background: #ddd; /* Light button background */
+        border-color: #aaa; /* Button border color */
+        color: #333; /* Darker button text color */
+    }
 }
