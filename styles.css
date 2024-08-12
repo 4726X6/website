@@ -119,5 +119,5 @@ input[type="submit"] {
 }
 
 .highlight-text {
-    transition: color 0.5s ease-out; /* Add a transition for the color */
+    transition: color 0.3s ease-out; /* Add a transition for the color */
 }
