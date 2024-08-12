@@ -117,3 +117,7 @@ input[type="submit"] {
         border-color: #888; /* Button border color */
     }
 }
+
+.highlight-text {
+    transition: color 0.5s ease-out; /* Add a transition for the color */
+}
