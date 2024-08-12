@@ -21,6 +21,14 @@
             color: bisque;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
         }
+
+        .copied-message {
+            margin-top: 20px;
+            font-size: 24px;
+            color: lightgreen;
+            opacity: 0;
+            font-family: 'Courier New', Courier, monospace;
+        }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" />
     <link rel="stylesheet" href="styles.css" />
@@ -35,6 +43,7 @@
             <form action="https://www.mcdfoodforthoughts.com/" target="_blank">
                 <input type="submit" value="Go to Food for Thoughts" />
             </form>
+            <p class="copied-message" id="copiedMessage">Copied!</p>
         </section>
     </main>
 
