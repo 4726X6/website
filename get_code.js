@@ -140,24 +140,44 @@ function updateCode(code) {
     document.getElementById('part3').textContent = part3;
 }
 
-// Function to copy the clicked text to clipboard
 function copyToClipboard(event) {
     const textToCopy = event.target.textContent;
     navigator.clipboard.writeText(textToCopy).then(() => {
         highlightText(event.target);
+        showCopiedMessage(event.target.textContent);
     }).catch(err => {
         console.error('Could not copy text: ', err);
     });
 }
 
 function highlightText(element) {
-    const originalColor = element.style.color;
+    const originalColor = "bisque"; // Store the original color
+    element.classList.add('highlight-text');  // Ensure the transition applies
     element.style.color = '#333';  // Highlight color
 
-    setTimeout(() => {
-        element.style.color = originalColor;  // Revert to original color
-    }, 500);  // Duration of the highlight effect
+    const timeoutId = setTimeout(() => {
+        element.style.color = originalColor;
+    }, 500);
+
+    element.dataset.timeoutId = timeoutId;  // Store the timeout ID
 }
+
+
+
+function showCopiedMessage(text) {
+    const copiedMessage = document.getElementById('copiedMessage');
+    
+    copiedMessage.textContent = `${text} copied!`;
+    copiedMessage.style.display = 'block'; // Show the message
+    copiedMessage.style.opacity = '1'; // Ensure full opacity
+    
+    // Hide the message after 2 seconds with a fade-out effect
+    setTimeout(() => {
+        copiedMessage.style.transition = 'opacity 0.5s';
+        copiedMessage.style.opacity = '0'; // Start fade-out
+    }, 1250);
+}
+
 
 
 
