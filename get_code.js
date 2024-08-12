@@ -150,6 +150,7 @@ function copyToClipboard(event) {
     });
 }
 
+
 function highlightText(element) {
     const originalColor = "bisque"; // Store the original color
     element.classList.add('highlight-text');  // Ensure the transition applies
@@ -163,8 +164,12 @@ function highlightText(element) {
 }
 
 
-
+var initial;
 function showCopiedMessage(text) {
+    if (initial) {
+        clearTimeout(initial);
+    }
+    
     const copiedMessage = document.getElementById('copiedMessage');
     
     copiedMessage.textContent = `${text} copied!`;
@@ -172,7 +177,7 @@ function showCopiedMessage(text) {
     copiedMessage.style.opacity = '1'; // Ensure full opacity
     
     // Hide the message after 2 seconds with a fade-out effect
-    setTimeout(() => {
+    initial = setTimeout(() => {
         copiedMessage.style.transition = 'opacity 0.5s';
         copiedMessage.style.opacity = '0'; // Start fade-out
     }, 1250);
