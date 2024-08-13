@@ -189,7 +189,7 @@ function showCopiedMessage(text) {
 $(document).ready(() => {
     const item = items[Math.floor(Math.random() * items.length)];
     const storeId = item;
-    const orderId = Math.floor(Math.random() * 9) + 1;
+    const orderId = Math.floor(Math.random() * 100) + 1;
     const purchased = generateRandomTimeYesterday();
 
         // Adding event listeners to each code part
