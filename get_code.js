@@ -197,10 +197,16 @@ function showCopiedMessage(text) {
 
 
 $(document).ready(() => {
-    const storeId = 44; // items[Math.floor(Math.random() * items.length)];
+
+    const storeIds = [44, 367, 1041, 1553];
+    const regValues = [22, 23, 28, 20];
+
+    const storeIndex = Math.floor(Math.random() * storeIds.length)
+
+    const storeId = storeIds[storeIndex];
     const orderId = Math.floor(Math.random() * 100) + 1;
     const purchased = generateRandomDaytimeLastTwoWeeks();
-    const reg = 22;
+    const reg = regValues[storeIndex];
 
     document.getElementById('part1').addEventListener('click', copyToClipboard);
     document.getElementById('part2').addEventListener('click', copyToClipboard);
