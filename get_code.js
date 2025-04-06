@@ -1,7 +1,9 @@
 const CHAR_MAP = "CM7WD6N4RHF9ZL3XKQGVPBTJY";
 const BASE = CHAR_MAP.length;
 const EPOCH = new Date("2016-02-01");
-const items = [1, 2, 4, 6, 7, 8, 9, 11, 13, 14, 15, 16, 17, 18, 19, 20, 21, 23, 24, 25, 26, 27, 28, 29, 30, 31, 34, 36, 37, 38, 39, 41, 42, 43, 44, 47, 48, 49,
+const REG_DELIVERY = 61;
+
+const storeId = [1, 2, 4, 6, 7, 8, 9, 11, 13, 14, 15, 16, 17, 18, 19, 20, 21, 23, 24, 25, 26, 27, 28, 29, 30, 31, 34, 36, 37, 38, 39, 41, 42, 43, 44, 47, 48, 49,
     50, 51, 52, 53, 54, 55, 58, 59, 60, 61, 62, 64, 66, 68, 70, 71, 72, 73, 74, 75, 76, 78, 79, 81, 82, 83, 86, 88, 89, 90, 92, 93, 95, 98, 101, 102, 103,
     104, 107, 108, 109, 110, 111, 114, 115, 118, 119, 120, 121, 123, 125, 126, 127, 128, 129, 130, 131, 133, 136, 139, 140, 141, 142, 145, 146, 147, 148,
     149, 150, 151, 152, 154, 155, 156, 157, 158, 159, 160, 162, 164, 165, 166, 169, 170, 176, 178, 179, 180, 182, 183, 184, 187, 189, 190, 194, 197, 199,
@@ -53,85 +55,95 @@ const items = [1, 2, 4, 6, 7, 8, 9, 11, 13, 14, 15, 16, 17, 18, 19, 20, 21, 23, 
     1673, 1674, 1675, 1676, 1677, 1678, 1679, 1680, 1681, 1682, 1683, 1684, 1685, 1686, 1687, 1688, 1689, 1690, 1692, 1693, 1695, 2091
 ];
 
+storeIdsKnown = [300, ]
+
 function encode(num) {
-    let encoded = "";
+	let encoded = "";
 
-    while (num >= BASE) {
-        encoded = CHAR_MAP[num % BASE] + encoded;
-        num = Math.floor(num / BASE);
-    }
+	while (num >= BASE) {
+		encoded = CHAR_MAP[num % BASE] + encoded;
+		num = Math.floor(num / BASE);
+	}
 
-    return CHAR_MAP[num] + encoded;
+	return CHAR_MAP[num] + encoded;
 }
 
 function decode(encoded) {
-    let num = 0;
+	let num = 0;
 
-    for (let i = 0; i < encoded.length; i++) {
-        const char = encoded[i];
-        const exp = encoded.length - i - 1;
-        num += Math.pow(BASE, exp) * CHAR_MAP.indexOf(char);
-    }
+	for (let i = 0; i < encoded.length; i++) {
+		const char = encoded[i];
+		const exp = encoded.length - i - 1;
+		num += Math.pow(BASE, exp) * CHAR_MAP.indexOf(char);
+	}
 
-    return num;
+	return num;
 }
 
 function getMinutesSinceEpoch(purchased) {
-    const date = new Date(purchased);
-    return (date - EPOCH) / 1000 / 60 - date.getTimezoneOffset();
+	const date = new Date(purchased);
+	return (date - EPOCH) / 1000 / 60 - date.getTimezoneOffset();
 }
 
 function getCheckDigit(code) {
-    const chars = code.split("").reverse();
-    let checkDigit = 0;
+	const chars = code.split("").reverse();
+	let checkDigit = 0;
 
-    for (let i = 0; i < chars.length; i++) {
-        let value = decode(chars[i]);
+	for (let i = 0; i < chars.length; i++) {
+		let value = decode(chars[i]);
 
-        if ((i % 2) === 0) {
-            value *= 2;
-            const encoded = encode(value);
+		if ((i % 2) === 0) {
+			value *= 2;
+			const encoded = encode(value);
 
-            if (encoded.length === 2) {
-                value = [...encoded].map(decode).reduce((total, num) => total + num, 0);
-            }
-        }
+			if (encoded.length === 2) {
+				value = [...encoded].map(decode).reduce((total, num) => total + num, 0);
+			}
+		}
 
-        checkDigit += value;
-    }
+		checkDigit += value;
+	}
 
-    checkDigit %= BASE;
+	checkDigit %= BASE;
 
-    if (checkDigit > 0) {
-        checkDigit = BASE - checkDigit;
-    }
+	if (checkDigit > 0) {
+		checkDigit = BASE - checkDigit;
+	}
 
-    return checkDigit;
+	return checkDigit;
 }
 
-function generateRandomTimeYesterday() {
+function generateCode(storeId, orderId, purchased, reg=20) {
+    const zero = encode(0);
+	const encStoreId = encode(storeId).padStart(3, zero);
+	const encOrderId = encode((orderId % 100) + (reg === REG_DELIVERY ? 0 : reg * 100)).padStart(3, zero);
+	const encMinutes = encode(getMinutesSinceEpoch(purchased)).padStart(5, zero);
+
+	let code = encStoreId + encOrderId + encMinutes;
+
+	code += encode(getCheckDigit(code));
+
+	return code.match(/.{4}/g).join("-");
+}
+
+function generateRandomDaytimeLastTwoWeeks() {
     const now = new Date();
-    const yesterday = new Date(now);
-    yesterday.setDate(now.getDate() - 1);
-    yesterday.setHours(0, 0, 0, 0);
+    
+    // Random number of days ago (1 to 14)
+    const daysAgo = Math.floor(Math.random() * 14) + 1;
 
-    const randomMinutes = Math.floor(Math.random() * 1440); // 1440 minutes in a day
-    yesterday.setMinutes(randomMinutes);
+    const randomDate = new Date(now);
+    randomDate.setDate(now.getDate() - daysAgo);
+    randomDate.setHours(10, 0, 0, 0); // Start at 10:00 AM
 
-    return yesterday;
+    // 7 hours = 420 minutes between 10 AM and 5 PM
+    const randomMinutes = Math.floor(Math.random() * 420);
+    randomDate.setMinutes(randomDate.getMinutes() + randomMinutes);
+
+    return randomDate;
 }
 
-function generateCode(storeId, orderId, purchased) {
-    const encStoreId = encode(storeId).padStart(3, encode(0));
-    const encOrderId = encode((orderId % 100) + 125);
-    const encMinutes = encode(getMinutesSinceEpoch(purchased)).padStart(5, encode(0));
 
-    let code = encStoreId + encode(3) + encOrderId + encMinutes;
-
-    code += encode(getCheckDigit(code));
-
-    return code.match(/.{4}/g).join("-");
-}
 
 function updateCode(code) {
     const [part1, part2, part3] = code.split('-');
@@ -184,21 +196,17 @@ function showCopiedMessage(text) {
 }
 
 
-
-
 $(document).ready(() => {
-    const item = items[Math.floor(Math.random() * items.length)];
-    const storeId = item;
+    const storeId = 44; // items[Math.floor(Math.random() * items.length)];
     const orderId = Math.floor(Math.random() * 100) + 1;
-    const purchased = generateRandomTimeYesterday();
+    const purchased = generateRandomDaytimeLastTwoWeeks();
+    const reg = 22;
 
-        // Adding event listeners to each code part
     document.getElementById('part1').addEventListener('click', copyToClipboard);
     document.getElementById('part2').addEventListener('click', copyToClipboard);
     document.getElementById('part3').addEventListener('click', copyToClipboard);
 
-    const code = generateCode(storeId, orderId, purchased);
+    const code = generateCode(storeId, orderId, purchased, reg);
     updateCode(code);
-    // $("#code").text(code);
 });
 
