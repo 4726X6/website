@@ -198,8 +198,8 @@ function showCopiedMessage(text) {
 
 $(document).ready(() => {
 
-    const storeIds = [44, 367, 1041, 1553];
-    const regValues = [22, 23, 28, 20];
+    const storeIds = [44, 367, 1041, 1553, 634];
+    const regValues = [22, 23, 28, 20, 1];
 
     const storeIndex = Math.floor(Math.random() * storeIds.length)
 
