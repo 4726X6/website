@@ -101,12 +101,7 @@
             timeEl.textContent = formatTime(window._countdownRemaining);
 
             btn.addEventListener('click', ()=>{
-                if (window.runGenerator) {
-                    window.runGenerator();
-                } else {
-                    location.reload();
-                    return;
-                }
+                window.runGenerator();
                 // reset the countdown and animate the button
                 window._countdownRemaining = START_SECONDS;
                 timeEl.textContent = formatTime(window._countdownRemaining);
