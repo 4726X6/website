@@ -29,6 +29,38 @@
             opacity: 0;
             font-family: 'Courier New', Courier, monospace;
         }
+        #countdown {
+            position: fixed;
+            bottom: 28px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.55));
+            color: bisque;
+            padding: 16px 32px;
+            border-radius: 14px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 28px;
+            z-index: 9999;
+            box-shadow: 0 10px 26px rgba(0,0,0,0.6);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: background 150ms ease, transform 120ms ease;
+        }
+        #countdown:active { transform: translateX(-50%) scale(0.98); }
+        #countdown .hint { display: none; }
+        #countdown:hover { background: rgba(0,0,0,0.85); }
+        #countdown:hover .time { display: none; }
+        #countdown:hover .hint { display: inline; }
+
+        @keyframes refreshPulse {
+            0% { transform: translateX(-50%) scale(1); box-shadow: 0 10px 26px rgba(0,0,0,0.6); }
+            50% { transform: translateX(-50%) scale(1.08); box-shadow: 0 18px 40px rgba(0,0,0,0.75); }
+            100% { transform: translateX(-50%) scale(1); box-shadow: 0 10px 26px rgba(0,0,0,0.6); }
+        }
+        #countdown.refreshing { animation: refreshPulse 700ms ease; }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" />
     <link rel="stylesheet" href="styles.css" />
@@ -47,7 +79,61 @@
         </section>
     </main>
 
+    <button id="countdown" type="button" aria-live="polite" aria-label="Page refresh timer">
+        <span class="time">02:00</span>
+        <span class="hint" aria-hidden="true">Refresh</span>
+    </button>
+
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="get_code.js"></script>
+    <script>
+        (function(){
+            const START_SECONDS = 120;
+            window._countdownRemaining = START_SECONDS;
+            const btn = document.getElementById('countdown');
+            if(!btn) return;
+            const timeEl = btn.querySelector('.time');
+            function formatTime(s){
+                const m = Math.floor(s/60);
+                const sec = s % 60;
+                return String(m).padStart(2,'0') + ':' + String(sec).padStart(2,'0');
+            }
+            timeEl.textContent = formatTime(window._countdownRemaining);
+
+            btn.addEventListener('click', ()=>{
+                if (window.runGenerator) {
+                    window.runGenerator();
+                } else {
+                    location.reload();
+                    return;
+                }
+                // reset the countdown and animate the button
+                window._countdownRemaining = START_SECONDS;
+                timeEl.textContent = formatTime(window._countdownRemaining);
+                btn.classList.add('refreshing');
+                btn.addEventListener('animationend', ()=> btn.classList.remove('refreshing'), { once: true });
+            });
+
+            const tick = setInterval(()=>{
+                window._countdownRemaining -= 1;
+                if(window._countdownRemaining <= 0){
+                    if (window.runGenerator) {
+                        window.runGenerator();
+                        // animate to show refresh happened
+                        btn.classList.add('refreshing');
+                        btn.addEventListener('animationend', ()=> btn.classList.remove('refreshing'), { once: true });
+                        window._countdownRemaining = START_SECONDS;
+                        timeEl.textContent = formatTime(window._countdownRemaining);
+                        return;
+                    }
+                    clearInterval(tick);
+                    timeEl.textContent = '00:00';
+                    location.reload();
+                    return;
+                }
+                timeEl.textContent = formatTime(window._countdownRemaining);
+            }, 1000);
+        })();
+    </script>
 </body>
 </html>

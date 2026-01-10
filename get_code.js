@@ -196,23 +196,35 @@ function showCopiedMessage(text) {
 }
 
 
-$(document).ready(() => {
+function _ensureClickListeners() {
+    const p1 = document.getElementById('part1');
+    const p2 = document.getElementById('part2');
+    const p3 = document.getElementById('part3');
 
+    if (p1 && !p1.dataset.listenerAdded) { p1.addEventListener('click', copyToClipboard); p1.dataset.listenerAdded = '1'; }
+    if (p2 && !p2.dataset.listenerAdded) { p2.addEventListener('click', copyToClipboard); p2.dataset.listenerAdded = '1'; }
+    if (p3 && !p3.dataset.listenerAdded) { p3.addEventListener('click', copyToClipboard); p3.dataset.listenerAdded = '1'; }
+}
+
+window.runGenerator = function() {
     const storeIds = [44, 367, 1041, 1553, 634];
     const regValues = [22, 23, 28, 20, 1];
 
-    const storeIndex = Math.floor(Math.random() * storeIds.length)
+    const storeIndex = Math.floor(Math.random() * storeIds.length);
 
     const storeId = storeIds[storeIndex];
     const orderId = Math.floor(Math.random() * 100) + 1;
     const purchased = generateRandomDaytimeLastTwoWeeks();
     const reg = regValues[storeIndex];
 
-    document.getElementById('part1').addEventListener('click', copyToClipboard);
-    document.getElementById('part2').addEventListener('click', copyToClipboard);
-    document.getElementById('part3').addEventListener('click', copyToClipboard);
-
     const code = generateCode(storeId, orderId, purchased, reg);
     updateCode(code);
+    // Notify the page that the generator ran so UI can animate/React
+    try { document.dispatchEvent(new CustomEvent('generator:ran')); } catch (e) { /* ignore */ }
+};
+
+$(document).ready(() => {
+    _ensureClickListeners();
+    if (window.runGenerator) window.runGenerator();
 });
 
